@@ -22,7 +22,9 @@
 
 #include <linux/netlink.h>
 #include <sys/socket.h>
+#include <sys/wait.h>
 #include <errno.h>
+#include <pthread.h>
 
 
 struct stat st = {0};
@@ -120,6 +122,12 @@ int bind_socket(int sock_fd) {
 struct ReciveMsg {
     char* msg;
     int length;
+};
+
+struct ArgPthread {
+    char *comm;
+    char *ip;
+    int socke_fd;
 };
 
 struct ReciveMsg * reciv_data(int sock_fd) {
@@ -236,6 +244,7 @@ void read_config(int sock_fd) {
     DIR *d;
     struct dirent *dir;
     char* state;
+    char *sendMsg;
 
     d = opendir(PATH_CONFIG);
     if(d) {
@@ -244,8 +253,15 @@ void read_config(int sock_fd) {
                 continue;
             }
             state = readStatProc(dir->d_name);
-            syslog (LOG_NOTICE, "find dir: %s (%s)", dir->d_name, state);
+            sendMsg = malloc(strlen(dir->d_name) + strlen(state) + 3);
+            memset(sendMsg, 0, strlen(dir->d_name) + strlen(state) + 3);
+            sendMsg[0] = NETLINK_OPCODE_RULE;
+            strcat(sendMsg, dir->d_name);
+            strcat(sendMsg, "&");
+            strcat(sendMsg, state);
 
+            syslog (LOG_NOTICE, "find dir: %s (%s)", dir->d_name, state);
+            send_data(sock_fd, sendMsg);
         }
         closedir(d);
     }
@@ -289,6 +305,40 @@ void hook_new_rule(char* comm, char* ip, char* mode) {
 
 }
 
+int runProcess = 0;
+void *openConfirmation(void *varg) {
+    struct ArgPthread *argPthread = (struct ArgPthread *)varg;
+    syslog (LOG_NOTICE, "theard created with (%s, %s).\n", argPthread->comm, argPthread->ip);
+    FILE *fp;
+    char command[255];
+    char sendMsg[255];
+    sprintf(command, "zenity --question \
+            --title 'Новый процесс' \
+            --text 'Новый процесс `%s` пытается получить доступ к IP `%s`'", argPthread->comm, argPthread->ip);
+    fp = popen(command, "r");
+    char ret;
+    if(fp == NULL){
+        syslog (LOG_NOTICE, "window not showind.\n");
+        return;
+    } else {
+        ret = WEXITSTATUS(pclose(fp));
+        syslog (LOG_NOTICE, "code: %i, %i, %i, %i, %i \n", EMFILE, ENFILE, EFAULT, ENOMEM, EAGAIN);
+        syslog (LOG_NOTICE, "user click: %i. %i \n", ret, errno);
+        if(ret == 0) {
+            syslog (LOG_NOTICE, "user click: allow.\n", ret);
+            hook_new_rule(argPthread->comm, argPthread->ip, COMMAND_ALLOW);
+            sprintf(sendMsg, "%c%s&%s", NETLINK_OPCODE_RULE, argPthread->comm, COMMAND_ALLOW);
+        } else {
+            syslog (LOG_NOTICE, "user click: deny.\n", ret);
+            hook_new_rule(argPthread->comm, argPthread->ip, COMMAND_DENY);
+            sprintf(sendMsg, "%c%s&%s", NETLINK_OPCODE_RULE, argPthread->comm, COMMAND_DENY);
+        }
+        send_data(argPthread->socke_fd, sendMsg);
+    }
+
+    runProcess = 0;
+}
+
 int main()
 {
     skeleton_daemon();
@@ -306,6 +356,8 @@ int main()
     int ipv4;
     char ipv4s[16];
     struct in_addr ip_addr;
+    struct ArgPthread argPthread;
+    pthread_t tid;
 
     sock_fd = create_socket();
 
@@ -328,14 +380,12 @@ int main()
 
     read_config(sock_fd);
 
-
     syslog (LOG_NOTICE, "sfw daemon start.");
     for( ;exit; ) {
         data = reciv_data(sock_fd);
         if(data == NULL) {
             continue;
         }
-        syslog (LOG_NOTICE, "OPPCODE: %d\n", data->msg[0]);
 
         switch(data->msg[0]){
         case SEND_TYPE_EXIT:
@@ -343,7 +393,13 @@ int main()
             break;
         case SEND_TYPE_NEW_RULE:
             syslog (LOG_NOTICE, "kernel create new Rule: %s\n", data->msg);
-            for(i=1;i<data->length;i++){
+            if(runProcess == 1) {
+                syslog (LOG_NOTICE, "windows is showing already \n");
+                break;
+            }
+            runProcess = 1;
+
+            for(i=1;i<data->length;i++) {
                 if(data->msg[i] == '&') {
                    commName = (char *)malloc(sizeof(char) * i);
                    memset(commName, 0, i);
@@ -351,11 +407,17 @@ int main()
                    break;
                 }
             }
+
             memcpy(&ipv4, data->msg+i+1, sizeof (int));
             ip_addr.s_addr = ipv4;
             syslog (LOG_NOTICE, "Process name: %s %d\n", commName, i);
             syslog (LOG_NOTICE, "ip: %s\n", inet_ntoa(ip_addr));
-            free(commName);
+            argPthread.comm = commName;
+            argPthread.ip = inet_ntoa(ip_addr);
+            argPthread.socke_fd = sock_fd;
+
+            pthread_create(&tid, NULL, openConfirmation, (void *)&argPthread);
+
             break;
         default:
 
@@ -364,7 +426,6 @@ int main()
         }
 
         syslog (LOG_NOTICE, "Cycle recive: %s\n", data->msg);
-        break;
     }
 
     syslog (LOG_NOTICE, "First daemon terminated.");

@@ -70,13 +70,12 @@ unsigned int hook_func_out(
     struct Rule *rl;
 
     if(daemon_pid == 0) {
-        return NF_ACCEPT;
-    }
-    if(ruleList == NULL) {
+        printk(KERN_INFO "daemon is 0\n");
         return NF_ACCEPT;
     }
 
     rl = ruleList;
+
     while (rl != NULL) {
         printk(KERN_INFO "rule %s mode:%d\n", rl->nameProc, rl->mode);
         if(strcmp(current->comm, rl->nameProc) == 0) {
@@ -119,7 +118,7 @@ int findAmp(char* str) {
     int len = strlen(str);
     int i;
     for(i=0;i<len;i++){
-        if(str[i] == "&") {
+        if(str[i] == '&') {
             return i;
         }
     }
@@ -163,7 +162,7 @@ static void netlink_test_recv_msg(struct sk_buff *skb)
             ruleLast->next = rule;
             ruleLast = rule;
         }
-
+//*/
         break;
     }
 
