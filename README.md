@@ -3,7 +3,11 @@
 this project is simpel firewall for try filter package with use netfilter(iptables) hooks with Windows control as Windows Default firewall.
 
 Requriments:
-  1) kernel version > 4.13.0
-  2) zenity
+  *) kernel version > 4.13.0
+  *) zenity
 
-sudo apt install zenity
+next steps:
+1) sudo apt install zenity
+2) make
+3) sudo insmod simple_module.ko
+4) sudo ./sfw_daemon
