@@ -310,11 +310,13 @@ void *openConfirmation(void *varg) {
     struct ArgPthread *argPthread = (struct ArgPthread *)varg;
     syslog (LOG_NOTICE, "theard created with (%s, %s).\n", argPthread->comm, argPthread->ip);
     FILE *fp;
-    char command[255];
+    char command[500];
     char sendMsg[255];
     sprintf(command, "zenity --question \
             --title 'Новый процесс' \
-            --text 'Новый процесс `%s` пытается получить доступ к IP `%s`'", argPthread->comm, argPthread->ip);
+            --text 'Новый процесс `%s` пытается получить доступ к IP `%s`'\
+            --ok-label 'Разрешить'\
+            --cancel-label 'Заблокировать'", argPthread->comm, argPthread->ip);
     fp = popen(command, "r");
     char ret;
     if(fp == NULL){
