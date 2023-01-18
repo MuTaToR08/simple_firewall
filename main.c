@@ -1,12 +1,3 @@
-/*
- * daemonize.c
- * This example daemonizes a process, writes a few log messages,
- * sleeps 20 seconds and terminates afterwards.
- * This is an answer to the stackoverflow question:
- * https://stackoverflow.com/questions/17954432/creating-a-daemon-in-linux/17955149#17955149
- * Fork this code: https://github.com/pasce/daemon-skeleton-linux-c
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -109,16 +100,6 @@ int create_socket() {
     return sock_fd;
 }
 
-int bind_socket(int sock_fd) {
-    struct sockaddr_nl src_addr;
-    memset(&src_addr, 0, sizeof(src_addr));
-    src_addr.nl_family = AF_NETLINK;
-    src_addr.nl_pid = getpid();  /* self pid */
-    src_addr.nl_groups = 0;  /* not in mcast groups */
-    bind(sock_fd, (struct sockaddr*)&src_addr, sizeof(src_addr));
-
-}
-
 struct ReciveMsg {
     char* msg;
     int length;
@@ -157,8 +138,8 @@ struct ReciveMsg * reciv_data(int sock_fd) {
     //  return 1;
     }
 
-    recive  = (struct ReciveMsg*)malloc(sizeof (recive));
-    memset(recive, 0, sizeof (recive));
+    recive  = (struct ReciveMsg*)malloc(sizeof (struct ReciveMsg));
+    memset(recive, 0, sizeof (struct ReciveMsg));
     recive->length = rc;
     recive->msg = (char *)malloc(sizeof(char) * rc);
     strcpy(recive->msg, NLMSG_DATA(nlh));
@@ -211,7 +192,7 @@ int send_data(int sock_fd, char *send) {
 }
 
 char* readStatProc(char *procName){
-    int *fd;
+    int fd;
     int lenProc;
     char* filePath;
     struct stat fileStat;
@@ -228,7 +209,7 @@ char* readStatProc(char *procName){
 
 
     fd = open(filePath, O_RDWR);
-    if(fd == NULL) {
+    if(fd < 0) {
         syslog (LOG_NOTICE, "file not opened(%d). %s\n", fd, filePath);
     }
     res = fstat(fd, &fileStat);
@@ -236,6 +217,7 @@ char* readStatProc(char *procName){
     memset(buff, 0, fileStat.st_size + 1);
     read(fd, buff, 10);
     close(fd);
+    free(filePath);
 
     return buff;
 }
@@ -295,13 +277,13 @@ void hook_new_rule(char* comm, char* ip, char* mode) {
     fd = fopen(filePath, "w+");
     if(fd == NULL) {
         syslog (LOG_NOTICE, "file not created. %s\n", filePath);
+        free(filePath);
         return;
     }
 
     fprintf(fd, mode);
-
     fclose(fd);
-
+    free(filePath);
 
 }
 
@@ -327,11 +309,11 @@ void *openConfirmation(void *varg) {
         syslog (LOG_NOTICE, "code: %i, %i, %i, %i, %i \n", EMFILE, ENFILE, EFAULT, ENOMEM, EAGAIN);
         syslog (LOG_NOTICE, "user click: %i. %i \n", ret, errno);
         if(ret == 0) {
-            syslog (LOG_NOTICE, "user click: allow.\n", ret);
+            syslog (LOG_NOTICE, "user click: allow.\n");
             hook_new_rule(argPthread->comm, argPthread->ip, COMMAND_ALLOW);
             sprintf(sendMsg, "%c%s&%s", NETLINK_OPCODE_RULE, argPthread->comm, COMMAND_ALLOW);
         } else {
-            syslog (LOG_NOTICE, "user click: deny.\n", ret);
+            syslog (LOG_NOTICE, "user click: deny.\n");
             hook_new_rule(argPthread->comm, argPthread->ip, COMMAND_DENY);
             sprintf(sendMsg, "%c%s&%s", NETLINK_OPCODE_RULE, argPthread->comm, COMMAND_DENY);
         }
@@ -339,6 +321,7 @@ void *openConfirmation(void *varg) {
     }
 
     runProcess = 0;
+    return NULL;
 }
 
 int main()
@@ -412,7 +395,7 @@ int main()
 
             memcpy(&ipv4, data->msg+i+1, sizeof (int));
             ip_addr.s_addr = ipv4;
-            syslog (LOG_NOTICE, "Process name: %s %d\n", commName, i);
+            syslog (LOG_NOTICE, "Process name: %s %d\n", commName, i); // commName всегда существует при этом  контексте
             syslog (LOG_NOTICE, "ip: %s\n", inet_ntoa(ip_addr));
             argPthread.comm = commName;
             argPthread.ip = inet_ntoa(ip_addr);
