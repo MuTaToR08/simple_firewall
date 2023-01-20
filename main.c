@@ -135,7 +135,6 @@ struct ReciveMsg * reciv_data(int sock_fd) {
       free(nlh);
       syslog(LOG_NOTICE,"not recivemsg(): \n");
       return NULL;
-    //  return 1;
     }
 
     recive  = (struct ReciveMsg*)malloc(sizeof (struct ReciveMsg));
@@ -197,7 +196,6 @@ char* readStatProc(char *procName){
     char* filePath;
     struct stat fileStat;
     char* buff;
-    int res;
 
     lenProc = strlen(procName);
     filePath = malloc(sizeof (char) * (lenProc + sizeof (PATH_CONFIG) + 2 + 5 ));
@@ -212,7 +210,7 @@ char* readStatProc(char *procName){
     if(fd < 0) {
         syslog (LOG_NOTICE, "file not opened(%d). %s\n", fd, filePath);
     }
-    res = fstat(fd, &fileStat);
+    fstat(fd, &fileStat);
     buff = malloc(sizeof(char*) * fileStat.st_size + 1);
     memset(buff, 0, fileStat.st_size + 1);
     read(fd, buff, 10);
@@ -247,15 +245,12 @@ void read_config(int sock_fd) {
         }
         closedir(d);
     }
-
-//    send_data(sock_fd, DAEMON_HELLO);
 }
 
 void hook_new_rule(char* comm, char* ip, char* mode) {
 
     char *path;
     char *filePath;
-    int commLen;
     FILE *fd;
     path = malloc(sizeof (char) * (strlen(comm) + strlen(PATH_CONFIG) + 2));
     filePath = malloc(sizeof (char) * (strlen(comm) + strlen(PATH_CONFIG) + 2 + 5));
@@ -303,7 +298,7 @@ void *openConfirmation(void *varg) {
     char ret;
     if(fp == NULL){
         syslog (LOG_NOTICE, "window not showind.\n");
-        return;
+        return NULL;
     } else {
         ret = WEXITSTATUS(pclose(fp));
         syslog (LOG_NOTICE, "code: %i, %i, %i, %i, %i \n", EMFILE, ENFILE, EFAULT, ENOMEM, EAGAIN);
@@ -329,17 +324,14 @@ int main()
     skeleton_daemon();
 
     struct ReciveMsg* data;
-    unsigned nbytes;
     load_KE();
 
     int sock_fd;
-    int rc;
     int exit;
     exit= 1;
     char* commName;
     int i;
     int ipv4;
-    char ipv4s[16];
     struct in_addr ip_addr;
     struct ArgPthread argPthread;
     pthread_t tid;
@@ -402,16 +394,12 @@ int main()
             argPthread.socke_fd = sock_fd;
 
             pthread_create(&tid, NULL, openConfirmation, (void *)&argPthread);
-
-            break;
-        default:
-
-
             break;
         }
 
         syslog (LOG_NOTICE, "Cycle recive: %s\n", data->msg);
     }
+    pthread_join(&tid, NULL);
 
     syslog (LOG_NOTICE, "First daemon terminated.");
     closelog();
