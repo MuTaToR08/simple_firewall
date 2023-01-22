@@ -1,0 +1,847 @@
+desc: (none)
+cmd: ./sfw_daemon
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=150272
+mem_heap_B=7134
+mem_heap_extra_B=10
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=183429
+mem_heap_B=7718
+mem_heap_extra_B=26
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=186098
+mem_heap_B=21603
+mem_heap_extra_B=85
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=190473
+mem_heap_B=21603
+mem_heap_extra_B=85
+mem_stacks_B=0
+heap_tree=detailed
+n7: 21603 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 8192 0x50BB7C1: open_memstream (memstream.c:83)
+  n1: 8192 0x512FD1F: __vsyslog_chk (syslog.c:167)
+   n1: 8192 0x513027D: syslog (syslog.c:117)
+    n0: 8192 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 7134 0x5136D32: monstartup (gmon.c:131)
+  n1: 7134 0x1092DF: __gmon_start__ (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 7134 0x108F90: ??? (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 4096 0x50B2A60: _IO_file_doallocate (filedoalloc.c:101)
+  n1: 4096 0x50C0A74: _IO_doallocbuf (genops.c:398)
+   n1: 4096 0x50BEBE2: _IO_file_xsgetn (fileops.c:1383)
+    n1: 4096 0x50BD682: fread_unlocked (iofread_u.c:40)
+     n1: 4096 0x50F5E98: __tzfile_read (tzfile.c:191)
+      n1: 4096 0x50F58A7: tzset_internal (tzset.c:441)
+       n1: 4096 0x50F5B7B: __tz_convert (tzset.c:621)
+        n1: 4096 0x512FD5F: __vsyslog_chk (syslog.c:199)
+         n1: 4096 0x513027D: syslog (syslog.c:117)
+          n0: 4096 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 1030 0x50F611C: __tzfile_read (tzfile.c:282)
+  n1: 1030 0x50F58A7: tzset_internal (tzset.c:441)
+   n1: 1030 0x50F5B7B: __tz_convert (tzset.c:621)
+    n1: 1030 0x512FD5F: __vsyslog_chk (syslog.c:199)
+     n1: 1030 0x513027D: syslog (syslog.c:117)
+      n0: 1030 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 584 0x50BB798: open_memstream (memstream.c:76)
+  n1: 584 0x512FD1F: __vsyslog_chk (syslog.c:167)
+   n1: 584 0x513027D: syslog (syslog.c:117)
+    n0: 584 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 552 0x50B355B: __fopen_internal (iofopen.c:69)
+  n1: 552 0x50F5DFD: __tzfile_read (tzfile.c:168)
+   n1: 552 0x50F58A7: tzset_internal (tzset.c:441)
+    n1: 552 0x50F5B7B: __tz_convert (tzset.c:621)
+     n1: 552 0x512FD5F: __vsyslog_chk (syslog.c:199)
+      n1: 552 0x513027D: syslog (syslog.c:117)
+       n0: 552 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n0: 15 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=5
+#-----------
+time=193620
+mem_heap_B=17137
+mem_heap_extra_B=239
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=201239
+mem_heap_B=9003
+mem_heap_extra_B=8373
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=204856
+mem_heap_B=9401
+mem_heap_extra_B=223
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=8
+#-----------
+time=209302
+mem_heap_B=8361
+mem_heap_extra_B=215
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=211983
+mem_heap_B=8361
+mem_heap_extra_B=215
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=10
+#-----------
+time=215360
+mem_heap_B=41177
+mem_heap_extra_B=223
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=217979
+mem_heap_B=41177
+mem_heap_extra_B=223
+mem_stacks_B=0
+heap_tree=peak
+n4: 41177 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 32816 0x50FF812: __alloc_dir (opendir.c:247)
+  n1: 32816 0x50FF901: opendir_tail (opendir.c:145)
+   n1: 32816 0x1099EB: read_config (in /home/astra/simple_firewall/sfw_daemon)
+    n0: 32816 0x10A002: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 7134 0x5136D32: monstartup (gmon.c:131)
+  n1: 7134 0x1092DF: __gmon_start__ (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 7134 0x108F90: ??? (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 1030 0x50F611C: __tzfile_read (tzfile.c:282)
+  n1: 1030 0x50F58A7: tzset_internal (tzset.c:441)
+   n1: 1030 0x50F5B7B: __tz_convert (tzset.c:621)
+    n1: 1030 0x512FD5F: __vsyslog_chk (syslog.c:199)
+     n1: 1030 0x513027D: syslog (syslog.c:117)
+      n0: 1030 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n0: 197 in 12 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=12
+#-----------
+time=218138
+mem_heap_B=17137
+mem_heap_extra_B=239
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=223494
+mem_heap_B=8995
+mem_heap_extra_B=8381
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=224229
+mem_heap_B=8410
+mem_heap_extra_B=254
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=15
+#-----------
+time=233074
+mem_heap_B=8682
+mem_heap_extra_B=262
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=16
+#-----------
+time=241391
+mem_heap_B=8938
+mem_heap_extra_B=270
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=241954
+mem_heap_B=17670
+mem_heap_extra_B=274
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=18
+#-----------
+time=247282
+mem_heap_B=9528
+mem_heap_extra_B=8416
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=19
+#-----------
+time=250838
+mem_heap_B=9747
+mem_heap_extra_B=277
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=253379
+mem_heap_B=10267
+mem_heap_extra_B=285
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=257043
+mem_heap_B=9673
+mem_heap_extra_B=231
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=22
+#-----------
+time=260952
+mem_heap_B=9689
+mem_heap_extra_B=239
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=23
+#-----------
+time=263716
+mem_heap_B=17686
+mem_heap_extra_B=274
+mem_stacks_B=0
+heap_tree=detailed
+n6: 17686 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 8192 0x50BB7C1: open_memstream (memstream.c:83)
+  n1: 8192 0x512FD1F: __vsyslog_chk (syslog.c:167)
+   n2: 8192 0x513027D: syslog (syslog.c:117)
+    n0: 8192 0x10A024: main (in /home/astra/simple_firewall/sfw_daemon)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 7134 0x5136D32: monstartup (gmon.c:131)
+  n1: 7134 0x1092DF: __gmon_start__ (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 7134 0x108F90: ??? (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 1030 0x50F611C: __tzfile_read (tzfile.c:282)
+  n1: 1030 0x50F58A7: tzset_internal (tzset.c:441)
+   n1: 1030 0x50F5B7B: __tz_convert (tzset.c:621)
+    n1: 1030 0x512FD5F: __vsyslog_chk (syslog.c:199)
+     n1: 1030 0x513027D: syslog (syslog.c:117)
+      n0: 1030 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 584 0x50BB798: open_memstream (memstream.c:76)
+  n1: 584 0x512FD1F: __vsyslog_chk (syslog.c:167)
+   n2: 584 0x513027D: syslog (syslog.c:117)
+    n0: 584 0x10A024: main (in /home/astra/simple_firewall/sfw_daemon)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 544 0x4011E30: allocate_dtv (dl-tls.c:322)
+  n1: 544 0x40127BC: _dl_allocate_tls (dl-tls.c:539)
+   n1: 544 0x4E371B8: pthread_create@@GLIBC_2.2.5 (allocatestack.c:584)
+    n0: 544 0x10A14D: main (in /home/astra/simple_firewall/sfw_daemon)
+ n0: 202 in 15 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=24
+#-----------
+time=269044
+mem_heap_B=9544
+mem_heap_extra_B=8416
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=270904
+mem_heap_B=10206
+mem_heap_extra_B=266
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=274326
+mem_heap_B=8954
+mem_heap_extra_B=270
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=27
+#-----------
+time=276856
+mem_heap_B=17958
+mem_heap_extra_B=282
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=282184
+mem_heap_B=9816
+mem_heap_extra_B=8424
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=29
+#-----------
+time=287462
+mem_heap_B=9226
+mem_heap_extra_B=278
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=289992
+mem_heap_B=18230
+mem_heap_extra_B=290
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=31
+#-----------
+time=295320
+mem_heap_B=10088
+mem_heap_extra_B=8432
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=32
+#-----------
+time=300595
+mem_heap_B=9498
+mem_heap_extra_B=286
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=303125
+mem_heap_B=18502
+mem_heap_extra_B=298
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=308453
+mem_heap_B=10360
+mem_heap_extra_B=8440
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=311245
+mem_heap_B=10766
+mem_heap_extra_B=282
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=36
+#-----------
+time=316258
+mem_heap_B=18774
+mem_heap_extra_B=306
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=37
+#-----------
+time=321586
+mem_heap_B=10632
+mem_heap_extra_B=8448
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=323446
+mem_heap_B=11294
+mem_heap_extra_B=298
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=39
+#-----------
+time=326868
+mem_heap_B=10042
+mem_heap_extra_B=302
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=329398
+mem_heap_B=19046
+mem_heap_extra_B=314
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=41
+#-----------
+time=334726
+mem_heap_B=10904
+mem_heap_extra_B=8456
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=42
+#-----------
+time=336579
+mem_heap_B=11566
+mem_heap_extra_B=306
+mem_stacks_B=0
+heap_tree=detailed
+n7: 11566 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 7134 0x5136D32: monstartup (gmon.c:131)
+  n1: 7134 0x1092DF: __gmon_start__ (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 7134 0x108F90: ??? (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 1904 0x4011E30: allocate_dtv (dl-tls.c:322)
+  n1: 1904 0x40127BC: _dl_allocate_tls (dl-tls.c:539)
+   n1: 1904 0x4E371B8: pthread_create@@GLIBC_2.2.5 (allocatestack.c:584)
+    n0: 1904 0x10A14D: main (in /home/astra/simple_firewall/sfw_daemon)
+ n2: 1040 0x109592: reciv_data (in /home/astra/simple_firewall/sfw_daemon)
+  n0: 1040 0x10A02E: main (in /home/astra/simple_firewall/sfw_daemon)
+  n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 1030 0x50F611C: __tzfile_read (tzfile.c:282)
+  n1: 1030 0x50F58A7: tzset_internal (tzset.c:441)
+   n1: 1030 0x50F5B7B: __tz_convert (tzset.c:621)
+    n1: 1030 0x512FD5F: __vsyslog_chk (syslog.c:199)
+     n1: 1030 0x513027D: syslog (syslog.c:117)
+      n0: 1030 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 256 0x50B4F22: popen@@GLIBC_2.2.5 (iopopen.c:283)
+  n1: 256 0x109DFE: openConfirmation (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 256 0x4E364D2: start_thread (pthread_create.c:456)
+ n1: 162 0x50F4F16: __tzstring_len (tzset.c:106)
+  n1: 162 0x50F6852: __tzfile_read (tzfile.c:466)
+   n1: 162 0x50F58A7: tzset_internal (tzset.c:441)
+    n1: 162 0x50F5B7B: __tz_convert (tzset.c:621)
+     n1: 162 0x512FD5F: __vsyslog_chk (syslog.c:199)
+      n1: 162 0x513027D: syslog (syslog.c:117)
+       n0: 162 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n0: 40 in 14 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=43
+#-----------
+time=340004
+mem_heap_B=10314
+mem_heap_extra_B=310
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=342534
+mem_heap_B=19318
+mem_heap_extra_B=322
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=347862
+mem_heap_B=11176
+mem_heap_extra_B=8464
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=46
+#-----------
+time=353137
+mem_heap_B=10586
+mem_heap_extra_B=318
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=355667
+mem_heap_B=19590
+mem_heap_extra_B=330
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=360995
+mem_heap_B=11448
+mem_heap_extra_B=8472
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=49
+#-----------
+time=361202
+mem_heap_B=10814
+mem_heap_extra_B=306
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=50
+#-----------
+time=362848
+mem_heap_B=12110
+mem_heap_extra_B=322
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=51
+#-----------
+time=363787
+mem_heap_B=11854
+mem_heap_extra_B=314
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=52
+#-----------
+time=363962
+mem_heap_B=11923
+mem_heap_extra_B=341
+mem_stacks_B=0
+heap_tree=detailed
+n6: 11923 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 7134 0x5136D32: monstartup (gmon.c:131)
+  n1: 7134 0x1092DF: __gmon_start__ (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 7134 0x108F90: ??? (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 2448 0x4011E30: allocate_dtv (dl-tls.c:322)
+  n1: 2448 0x40127BC: _dl_allocate_tls (dl-tls.c:539)
+   n1: 2448 0x4E371B8: pthread_create@@GLIBC_2.2.5 (allocatestack.c:584)
+    n0: 2448 0x10A14D: main (in /home/astra/simple_firewall/sfw_daemon)
+ n2: 1040 0x109592: reciv_data (in /home/astra/simple_firewall/sfw_daemon)
+  n0: 1040 0x10A02E: main (in /home/astra/simple_firewall/sfw_daemon)
+  n0: 0 in 1 place, below massif's threshold (1.00%)
+ n1: 1030 0x50F611C: __tzfile_read (tzfile.c:282)
+  n1: 1030 0x50F58A7: tzset_internal (tzset.c:441)
+   n1: 1030 0x50F5B7B: __tz_convert (tzset.c:621)
+    n1: 1030 0x512FD5F: __vsyslog_chk (syslog.c:199)
+     n1: 1030 0x513027D: syslog (syslog.c:117)
+      n0: 1030 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 162 0x50F4F16: __tzstring_len (tzset.c:106)
+  n1: 162 0x50F6852: __tzfile_read (tzfile.c:466)
+   n1: 162 0x50F58A7: tzset_internal (tzset.c:441)
+    n1: 162 0x50F5B7B: __tz_convert (tzset.c:621)
+     n1: 162 0x512FD5F: __vsyslog_chk (syslog.c:199)
+      n1: 162 0x513027D: syslog (syslog.c:117)
+       n0: 162 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n0: 109 in 15 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=53
+#-----------
+time=364302
+mem_heap_B=11891
+mem_heap_extra_B=333
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=54
+#-----------
+time=365014
+mem_heap_B=16539
+mem_heap_extra_B=357
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=365643
+mem_heap_B=12443
+mem_heap_extra_B=349
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=56
+#-----------
+time=365807
+mem_heap_B=11854
+mem_heap_extra_B=314
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=57
+#-----------
+time=366036
+mem_heap_B=11865
+mem_heap_extra_B=303
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=58
+#-----------
+time=366270
+mem_heap_B=10858
+mem_heap_extra_B=326
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=59
+#-----------
+time=368249
+mem_heap_B=11130
+mem_heap_extra_B=334
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=60
+#-----------
+time=368621
+mem_heap_B=11102
+mem_heap_extra_B=322
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=61
+#-----------
+time=368800
+mem_heap_B=19862
+mem_heap_extra_B=338
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=62
+#-----------
+time=374128
+mem_heap_B=11720
+mem_heap_extra_B=8480
+mem_stacks_B=0
+heap_tree=detailed
+n5: 11720 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 7134 0x5136D32: monstartup (gmon.c:131)
+  n1: 7134 0x1092DF: __gmon_start__ (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 7134 0x108F90: ??? (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 2720 0x4011E30: allocate_dtv (dl-tls.c:322)
+  n1: 2720 0x40127BC: _dl_allocate_tls (dl-tls.c:539)
+   n1: 2720 0x4E371B8: pthread_create@@GLIBC_2.2.5 (allocatestack.c:584)
+    n0: 2720 0x10A14D: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 1030 0x50F611C: __tzfile_read (tzfile.c:282)
+  n1: 1030 0x50F58A7: tzset_internal (tzset.c:441)
+   n1: 1030 0x50F5B7B: __tz_convert (tzset.c:621)
+    n1: 1030 0x512FD5F: __vsyslog_chk (syslog.c:199)
+     n1: 1030 0x513027D: syslog (syslog.c:117)
+      n0: 1030 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 584 0x50BB798: open_memstream (memstream.c:76)
+  n1: 584 0x512FD1F: __vsyslog_chk (syslog.c:167)
+   n2: 584 0x513027D: syslog (syslog.c:117)
+    n0: 584 0x10A024: main (in /home/astra/simple_firewall/sfw_daemon)
+    n0: 0 in 1 place, below massif's threshold (1.00%)
+ n0: 252 in 16 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=63
+#-----------
+time=374335
+mem_heap_B=11086
+mem_heap_extra_B=314
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=64
+#-----------
+time=375988
+mem_heap_B=12382
+mem_heap_extra_B=330
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=65
+#-----------
+time=376927
+mem_heap_B=12126
+mem_heap_extra_B=322
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=66
+#-----------
+time=377102
+mem_heap_B=12195
+mem_heap_extra_B=349
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=67
+#-----------
+time=377442
+mem_heap_B=12163
+mem_heap_extra_B=341
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=68
+#-----------
+time=378154
+mem_heap_B=16811
+mem_heap_extra_B=365
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=69
+#-----------
+time=378783
+mem_heap_B=12715
+mem_heap_extra_B=357
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=70
+#-----------
+time=378947
+mem_heap_B=12126
+mem_heap_extra_B=322
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=71
+#-----------
+time=379176
+mem_heap_B=12137
+mem_heap_extra_B=311
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=72
+#-----------
+time=379410
+mem_heap_B=11130
+mem_heap_extra_B=334
+mem_stacks_B=0
+heap_tree=detailed
+n5: 11130 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 7134 0x5136D32: monstartup (gmon.c:131)
+  n1: 7134 0x1092DF: __gmon_start__ (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 7134 0x108F90: ??? (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 2720 0x4011E30: allocate_dtv (dl-tls.c:322)
+  n1: 2720 0x40127BC: _dl_allocate_tls (dl-tls.c:539)
+   n1: 2720 0x4E371B8: pthread_create@@GLIBC_2.2.5 (allocatestack.c:584)
+    n0: 2720 0x10A14D: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 1030 0x50F611C: __tzfile_read (tzfile.c:282)
+  n1: 1030 0x50F58A7: tzset_internal (tzset.c:441)
+   n1: 1030 0x50F5B7B: __tz_convert (tzset.c:621)
+    n1: 1030 0x512FD5F: __vsyslog_chk (syslog.c:199)
+     n1: 1030 0x513027D: syslog (syslog.c:117)
+      n0: 1030 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 162 0x50F4F16: __tzstring_len (tzset.c:106)
+  n1: 162 0x50F6852: __tzfile_read (tzfile.c:466)
+   n1: 162 0x50F58A7: tzset_internal (tzset.c:441)
+    n1: 162 0x50F5B7B: __tz_convert (tzset.c:621)
+     n1: 162 0x512FD5F: __vsyslog_chk (syslog.c:199)
+      n1: 162 0x513027D: syslog (syslog.c:117)
+       n0: 162 0x109EFE: main (in /home/astra/simple_firewall/sfw_daemon)
+ n0: 84 in 16 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=73
+#-----------
+time=381389
+mem_heap_B=11402
+mem_heap_extra_B=342
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=74
+#-----------
+time=381761
+mem_heap_B=11374
+mem_heap_extra_B=330
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=75
+#-----------
+time=383062
+mem_heap_B=11942
+mem_heap_extra_B=354
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=76
+#-----------
+time=388431
+mem_heap_B=12006
+mem_heap_extra_B=8490
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=77
+#-----------
+time=388638
+mem_heap_B=11358
+mem_heap_extra_B=322
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=78
+#-----------
+time=391534
+mem_heap_B=11614
+mem_heap_extra_B=330
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=79
+#-----------
+time=395389
+mem_heap_B=4480
+mem_heap_extra_B=320
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=80
+#-----------
+time=398603
+mem_heap_B=4460
+mem_heap_extra_B=300
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=81
+#-----------
+time=398763
+mem_heap_B=4359
+mem_heap_extra_B=201
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=82
+#-----------
+time=400141
+mem_heap_B=3253
+mem_heap_extra_B=115
+mem_stacks_B=0
+heap_tree=detailed
+n3: 3253 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 2992 0x4011E30: allocate_dtv (dl-tls.c:322)
+  n1: 2992 0x40127BC: _dl_allocate_tls (dl-tls.c:539)
+   n1: 2992 0x4E371B8: pthread_create@@GLIBC_2.2.5 (allocatestack.c:584)
+    n0: 2992 0x10A14D: main (in /home/astra/simple_firewall/sfw_daemon)
+ n1: 256 0x50B4F22: popen@@GLIBC_2.2.5 (iopopen.c:283)
+  n1: 256 0x109DFE: openConfirmation (in /home/astra/simple_firewall/sfw_daemon)
+   n0: 256 0x4E364D2: start_thread (pthread_create.c:456)
+ n0: 5 in 18 places, all below massif's threshold (1.00%)
