@@ -24,7 +24,7 @@ struct stat st = {0};
 #define FREE_RECIVE(data) free(data->msg);free(data);
 
 void load_KE() {
-    if(system("insmod /lib/module/$(shell uname -r)/extra/sfw_module.ko") == 0) {
+    if(system("insmod /lib/modules/$(shell uname -r)/extra/sfw_module.ko") == 0) {
         syslog(LOG_NOTICE, "daemon load module\n");
     } else {
         syslog(LOG_WARNING, "daemon not load module. Maby module is loaded already?\n");
