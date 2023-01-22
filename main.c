@@ -21,19 +21,14 @@
 struct stat st = {0};
 
 #include "common.h"
+#define FREE_RECIVE(data) free(data->msg);free(data);
 
 void load_KE() {
-    if(system("insmod simple_module.ko") == 0) {
-        syslog(LOG_NOTICE, "module loaded: \n");
-    }else {
-        syslog(LOG_NOTICE, "module notLoaded: \n");
-    }
+    system("insmod simple_module.ko");
 }
 
 void unload_KE() {
-    if(system("rmmod simple_module.ko") == 0) {
-        syslog(LOG_NOTICE, "module unloaded: \n");
-    }
+    system("rmmod simple_module.ko");
 }
 
 static void skeleton_daemon()
@@ -94,7 +89,7 @@ int create_socket() {
 
     sock_fd = socket(PF_NETLINK, SOCK_RAW, NETLINK_TRANSFER_ID);
     if (sock_fd < 0) {
-      syslog(LOG_NOTICE, "socket: \n");
+      syslog(LOG_NOTICE, "socket don't create: \n");
     }
 
     return sock_fd;
@@ -182,6 +177,7 @@ int send_data(int sock_fd, char *send) {
     syslog(LOG_NOTICE,"Send to kernel: %s\n", send);
 
     rc = sendmsg(sock_fd, &msg, 0);
+    free(nlh);
     if (rc < 0) {
       syslog(LOG_NOTICE, "not sending(): \n");
       return 1;
@@ -198,7 +194,7 @@ char* readStatProc(char *procName){
     char* buff;
 
     lenProc = strlen(procName);
-    filePath = malloc(sizeof (char) * (lenProc + sizeof (PATH_CONFIG) + 2 + 5 ));
+    filePath = malloc(sizeof (char) * (lenProc + sizeof (PATH_CONFIG) + 3 + 5 ));
     memset(filePath, 0, (lenProc) + sizeof (PATH_CONFIG) + 3 + 5);
     strcat(filePath, PATH_CONFIG);
     strcat(filePath, "/");
@@ -242,6 +238,8 @@ void read_config(int sock_fd) {
 
             syslog (LOG_NOTICE, "find dir: %s (%s)", dir->d_name, state);
             send_data(sock_fd, sendMsg);
+            free(state);
+            free(sendMsg);
         }
         closedir(d);
     }
@@ -266,8 +264,8 @@ void hook_new_rule(char* comm, char* ip, char* mode) {
     }
 
     strcat(filePath, path);
-    strcat(filePath, "/");
-    strcat(filePath, "stat");
+    strcat(filePath, "/stat");
+    free(path);
 
     fd = fopen(filePath, "w+");
     if(fd == NULL) {
@@ -316,6 +314,7 @@ void *openConfirmation(void *varg) {
     }
 
     runProcess = 0;
+    free(argPthread->comm);
     return NULL;
 }
 
@@ -329,12 +328,13 @@ int main()
     int sock_fd;
     int exit;
     exit= 1;
-    char* commName;
     int i;
     int ipv4;
     struct in_addr ip_addr;
     struct ArgPthread argPthread;
-    pthread_t tid;
+    pthread_t tid, tdefault;
+    memset(&tid, 0, sizeof (pthread_t));
+    memset(&tdefault, 0, sizeof (pthread_t));
 
     sock_fd = create_socket();
 
@@ -346,6 +346,7 @@ int main()
         unload_KE();
         return -1;
     }
+    FREE_RECIVE(data);
 
     if(stat(PATH_ROOT, &st) == -1) {
         mkdir(PATH_ROOT, 0700);
@@ -378,18 +379,17 @@ int main()
 
             for(i=1;i<data->length;i++) {
                 if(data->msg[i] == '&') {
-                   commName = (char *)malloc(sizeof(char) * i);
-                   memset(commName, 0, i);
-                   strncat(commName, data->msg+1, i-1);
+                   argPthread.comm = (char *)malloc(sizeof(char) * i);
+                   memset(argPthread.comm, 0, i);
+                   strncat(argPthread.comm, data->msg+1, i-1);
                    break;
                 }
             }
 
             memcpy(&ipv4, data->msg+i+1, sizeof (int));
-            ip_addr.s_addr = ipv4;
             syslog (LOG_NOTICE, "Process name: %s %d\n", commName, i); // commName всегда существует при этом  контексте
             syslog (LOG_NOTICE, "ip: %s\n", inet_ntoa(ip_addr));
-            argPthread.comm = commName;
+            ip_addr.s_addr = ipv4;
             argPthread.ip = inet_ntoa(ip_addr);
             argPthread.socke_fd = sock_fd;
 
@@ -398,8 +398,11 @@ int main()
         }
 
         syslog (LOG_NOTICE, "Cycle recive: %s\n", data->msg);
+        FREE_RECIVE(data);
     }
-    pthread_join(&tid, NULL);
+    if(pthread_equal(tid,tdefault) != 0) {
+       pthread_join(tid, NULL);
+    }
 
     syslog (LOG_NOTICE, "First daemon terminated.");
     closelog();
