@@ -24,11 +24,15 @@ struct stat st = {0};
 #define FREE_RECIVE(data) free(data->msg);free(data);
 
 void load_KE() {
-    system("insmod simple_module.ko");
+    if(system("insmod /lib/module/$(shell uname -r)/extra/sfw_module.ko") == 0) {
+        syslog(LOG_NOTICE, "daemon load module\n");
+    } else {
+        syslog(LOG_WARNING, "daemon not load module. Maby module is loaded already?\n");
+    }
 }
 
 void unload_KE() {
-    system("rmmod simple_module.ko");
+    system("rmmod sfw_module");
 }
 
 static void skeleton_daemon()
@@ -82,6 +86,7 @@ static void skeleton_daemon()
 
     /* Open the log file */
     openlog ("firstdaemon", LOG_PID, LOG_DAEMON);
+    signal(SIGCHLD, SIG_DFL);
 }
 
 int create_socket() {
@@ -89,7 +94,8 @@ int create_socket() {
 
     sock_fd = socket(PF_NETLINK, SOCK_RAW, NETLINK_TRANSFER_ID);
     if (sock_fd < 0) {
-      syslog(LOG_NOTICE, "socket don't create: \n");
+      syslog(LOG_CRIT, "socket don't create: \n");
+      exit(-1);
     }
 
     return sock_fd;
@@ -128,7 +134,7 @@ struct ReciveMsg * reciv_data(int sock_fd) {
     rc = recvmsg(sock_fd, &msg, 0);
     if (rc < 0) {
       free(nlh);
-      syslog(LOG_NOTICE,"not recivemsg(): \n");
+      syslog(LOG_ERR,"data is not recived\n");
       return NULL;
     }
 
@@ -174,12 +180,10 @@ int send_data(int sock_fd, char *send) {
     msg.msg_iov = &iov;
     msg.msg_iovlen = 1;
 
-    syslog(LOG_NOTICE,"Send to kernel: %s\n", send);
-
     rc = sendmsg(sock_fd, &msg, 0);
     free(nlh);
     if (rc < 0) {
-      syslog(LOG_NOTICE, "not sending(): \n");
+      syslog(LOG_ERR, "data is not sending: \n");
       return 1;
     }
 
@@ -204,7 +208,7 @@ char* readStatProc(char *procName){
 
     fd = open(filePath, O_RDWR);
     if(fd < 0) {
-        syslog (LOG_NOTICE, "file not opened(%d). %s\n", fd, filePath);
+        syslog (LOG_ERR, "file not opened: %s\n", fd, filePath);
     }
     fstat(fd, &fileStat);
     buff = malloc(sizeof(char*) * fileStat.st_size + 1);
@@ -236,7 +240,6 @@ void read_config(int sock_fd) {
             strcat(sendMsg, "&");
             strcat(sendMsg, state);
 
-            syslog (LOG_NOTICE, "find dir: %s (%s)", dir->d_name, state);
             send_data(sock_fd, sendMsg);
             free(state);
             free(sendMsg);
@@ -283,7 +286,6 @@ void hook_new_rule(char* comm, char* ip, char* mode) {
 int runProcess = 0;
 void *openConfirmation(void *varg) {
     struct ArgPthread *argPthread = (struct ArgPthread *)varg;
-    syslog (LOG_NOTICE, "theard created with (%s, %s).\n", argPthread->comm, argPthread->ip);
     FILE *fp;
     char command[500];
     char sendMsg[255];
@@ -295,22 +297,23 @@ void *openConfirmation(void *varg) {
     fp = popen(command, "r");
     char ret;
     if(fp == NULL){
-        syslog (LOG_NOTICE, "window not showind.\n");
+        syslog (LOG_ERR, "window not showind.\n");
         return NULL;
     } else {
         ret = WEXITSTATUS(pclose(fp));
-        syslog (LOG_NOTICE, "code: %i, %i, %i, %i, %i \n", EMFILE, ENFILE, EFAULT, ENOMEM, EAGAIN);
-        syslog (LOG_NOTICE, "user click: %i. %i \n", ret, errno);
-        if(ret == 0) {
-            syslog (LOG_NOTICE, "user click: allow.\n");
+        syslog (LOG_NOTICE, "press %i.\n", ret);
+        switch (ret) {
+        case 0:
             hook_new_rule(argPthread->comm, argPthread->ip, COMMAND_ALLOW);
             sprintf(sendMsg, "%c%s&%s", NETLINK_OPCODE_RULE, argPthread->comm, COMMAND_ALLOW);
-        } else {
-            syslog (LOG_NOTICE, "user click: deny.\n");
+            send_data(argPthread->socke_fd, sendMsg);
+            break;
+        case 1:
             hook_new_rule(argPthread->comm, argPthread->ip, COMMAND_DENY);
             sprintf(sendMsg, "%c%s&%s", NETLINK_OPCODE_RULE, argPthread->comm, COMMAND_DENY);
+            send_data(argPthread->socke_fd, sendMsg);
+            break;
         }
-        send_data(argPthread->socke_fd, sendMsg);
     }
 
     runProcess = 0;
@@ -323,8 +326,6 @@ int main()
     skeleton_daemon();
 
     struct ReciveMsg* data;
-    load_KE();
-
     int sock_fd;
     int exit;
     exit= 1;
@@ -335,13 +336,15 @@ int main()
     pthread_t tid, tdefault;
     memset(&tid, 0, sizeof (pthread_t));
     memset(&tdefault, 0, sizeof (pthread_t));
+    load_KE();
+    syslog (LOG_NOTICE, "sfw daemon start.");
 
     sock_fd = create_socket();
 
     send_data(sock_fd, DAEMON_HELLO);
     data = reciv_data(sock_fd);
     if(data == NULL || strcmp(data->msg, KERNEL_HELLO) != 0){
-        syslog (LOG_NOTICE, "kernel not response hello. %p %s\n", data, data->msg);
+        syslog (LOG_CRIT, "kernel not response hello. %p %s\n", data, data->msg);
         closelog();
         unload_KE();
         return -1;
@@ -358,7 +361,6 @@ int main()
 
     read_config(sock_fd);
 
-    syslog (LOG_NOTICE, "sfw daemon start.");
     for( ;exit; ) {
         data = reciv_data(sock_fd);
         if(data == NULL) {
@@ -387,8 +389,6 @@ int main()
             }
 
             memcpy(&ipv4, data->msg+i+1, sizeof (int));
-            syslog (LOG_NOTICE, "Process name: %s %d\n", commName, i); // commName всегда существует при этом  контексте
-            syslog (LOG_NOTICE, "ip: %s\n", inet_ntoa(ip_addr));
             ip_addr.s_addr = ipv4;
             argPthread.ip = inet_ntoa(ip_addr);
             argPthread.socke_fd = sock_fd;
@@ -396,8 +396,6 @@ int main()
             pthread_create(&tid, NULL, openConfirmation, (void *)&argPthread);
             break;
         }
-
-        syslog (LOG_NOTICE, "Cycle recive: %s\n", data->msg);
         FREE_RECIVE(data);
     }
     if(pthread_equal(tid,tdefault) != 0) {
