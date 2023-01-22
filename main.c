@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <fcntl.h>
-
+#include <string.h>
 #include <linux/netlink.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
@@ -24,10 +24,12 @@ struct stat st = {0};
 #define FREE_RECIVE(data) free(data->msg);free(data);
 
 void load_KE() {
-    if(system("insmod /lib/modules/$(shell uname -r)/extra/sfw_module.ko") == 0) {
+    int sysCall;
+    sysCall = (system("insmod /lib/modules/$(uname -r)/extra/sfw_module.ko"));
+    if(sysCall == 0) {
         syslog(LOG_NOTICE, "daemon load module\n");
     } else {
-        syslog(LOG_WARNING, "daemon not load module. Maby module is loaded already?\n");
+        syslog(LOG_WARNING, "daemon not load module. Maby module is loaded already? %s \n", strerror(errno));
     }
 }
 
@@ -208,7 +210,7 @@ char* readStatProc(char *procName){
 
     fd = open(filePath, O_RDWR);
     if(fd < 0) {
-        syslog (LOG_ERR, "file not opened: %s\n", fd, filePath);
+        syslog (LOG_ERR, "file not opened: %s\n", filePath);
     }
     fstat(fd, &fileStat);
     buff = malloc(sizeof(char*) * fileStat.st_size + 1);
@@ -301,7 +303,6 @@ void *openConfirmation(void *varg) {
         return NULL;
     } else {
         ret = WEXITSTATUS(pclose(fp));
-        syslog (LOG_NOTICE, "press %i.\n", ret);
         switch (ret) {
         case 0:
             hook_new_rule(argPthread->comm, argPthread->ip, COMMAND_ALLOW);
@@ -337,7 +338,7 @@ int main()
     memset(&tid, 0, sizeof (pthread_t));
     memset(&tdefault, 0, sizeof (pthread_t));
     load_KE();
-    syslog (LOG_NOTICE, "sfw daemon start.");
+    syslog (LOG_NOTICE, "sfw daemon start.\n");
 
     sock_fd = create_socket();
 
@@ -362,6 +363,7 @@ int main()
     read_config(sock_fd);
 
     for( ;exit; ) {
+        syslog(LOG_NOTICE, "wait data\n");
         data = reciv_data(sock_fd);
         if(data == NULL) {
             continue;
@@ -372,14 +374,12 @@ int main()
             exit = 0;
             break;
         case SEND_TYPE_NEW_RULE:
-            syslog (LOG_NOTICE, "kernel create new Rule: %s\n", data->msg);
             if(runProcess == 1) {
-                syslog (LOG_NOTICE, "windows is showing already \n");
                 break;
             }
             runProcess = 1;
 
-            for(i=1;i<data->length;i++) {
+            for(i=1; i < data->length;i++) {
                 if(data->msg[i] == '&') {
                    argPthread.comm = (char *)malloc(sizeof(char) * i);
                    memset(argPthread.comm, 0, i);
